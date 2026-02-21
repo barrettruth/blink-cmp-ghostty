@@ -19,24 +19,39 @@ local BASH_COMPLETION = table.concat({
 }, '\n')
 
 local function mock_system()
-  local original = vim.system
+  local original_system = vim.system
+  local original_schedule = vim.schedule
   ---@diagnostic disable-next-line: duplicate-set-field
-  vim.system = function(cmd)
+  vim.system = function(cmd, _, on_exit)
     if cmd[1] == 'ghostty' then
+      local result = { stdout = CONFIG_DOCS, code = 0 }
+      if on_exit then
+        on_exit(result)
+        return {}
+      end
       return {
         wait = function()
-          return { stdout = CONFIG_DOCS, code = 0 }
+          return result
         end,
       }
     end
+    local result = { stdout = '', code = 1 }
+    if on_exit then
+      on_exit(result)
+      return {}
+    end
     return {
       wait = function()
-        return { stdout = '', code = 1 }
+        return result
       end,
     }
   end
+  vim.schedule = function(fn)
+    fn()
+  end
   return function()
-    vim.system = original
+    vim.system = original_system
+    vim.schedule = original_schedule
   end
 end
 
