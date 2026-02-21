@@ -13,9 +13,31 @@ function M.new()
   return setmetatable({}, { __index = M })
 end
 
+local ghostty_config_dirs = {
+  vim.fn.expand('$XDG_CONFIG_HOME/ghostty'),
+  vim.fn.expand('$HOME/.config/ghostty'),
+  '/etc/ghostty',
+}
+
 ---@return boolean
 function M.enabled()
-  return vim.bo.filetype == 'ghostty'
+  if vim.bo.filetype == 'ghostty' then
+    return true
+  end
+  if vim.bo.filetype ~= 'config' and vim.bo.filetype ~= '' then
+    return false
+  end
+  local path = vim.api.nvim_buf_get_name(0)
+  if path == '' then
+    return false
+  end
+  local real = vim.uv.fs_realpath(path) or path
+  for _, dir in ipairs(ghostty_config_dirs) do
+    if real:find(dir, 1, true) == 1 then
+      return true
+    end
+  end
+  return false
 end
 
 ---@param stdout string
@@ -83,6 +105,9 @@ end
 ---@param ctx blink.cmp.Context
 ---@param callback fun(response: blink.cmp.CompletionResponse)
 local function respond(ctx, callback)
+  if not keys_cache or not enums_cache then
+    return
+  end
   local line = ctx.line
   local col = ctx.cursor[2]
   local eq_pos = line:find('=')
