@@ -103,7 +103,7 @@ end
 ---@param callback fun(response: blink.cmp.CompletionResponse)
 ---@return fun()
 function M:get_completions(ctx, callback)
-  if not keys_cache then
+  if not keys_cache or not enums_cache then
     keys_cache = parse_keys()
     enums_cache = parse_enums()
   end
