@@ -42,21 +42,29 @@ local function parse_keys()
   return items
 end
 
----@return table<string, string[]>
-local function parse_enums()
+---@return string?
+function M.bash_completion_path()
   local bin = vim.fn.exepath('ghostty')
   if bin == '' then
-    return {}
+    return nil
   end
   local real = vim.uv.fs_realpath(bin)
   if not real then
-    return {}
+    return nil
   end
   local prefix = real:match('(.*)/bin/ghostty$')
   if not prefix then
+    return nil
+  end
+  return prefix .. '/share/bash-completion/completions/ghostty.bash'
+end
+
+---@return table<string, string[]>
+local function parse_enums()
+  local path = M.bash_completion_path()
+  if not path then
     return {}
   end
-  local path = prefix .. '/share/bash-completion/completions/ghostty.bash'
   local fd = io.open(path, 'r')
   if not fd then
     return {}

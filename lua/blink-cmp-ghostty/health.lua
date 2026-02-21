@@ -27,19 +27,12 @@ function M.check()
     )
   end
 
-  local real = vim.uv.fs_realpath(bin)
-  if not real then
-    vim.health.warn('could not resolve ghostty symlink (enum completions will be unavailable)')
+  local source = require('blink-cmp-ghostty')
+  local path = source.bash_completion_path()
+  if not path then
+    vim.health.warn('could not resolve bash completion path (enum completions will be unavailable)')
     return
   end
-  local prefix = real:match('(.*)/bin/ghostty$')
-  if not prefix then
-    vim.health.warn(
-      'ghostty binary is not in a standard bin/ directory (enum completions will be unavailable)'
-    )
-    return
-  end
-  local path = prefix .. '/share/bash-completion/completions/ghostty.bash'
   local fd = io.open(path, 'r')
   if fd then
     fd:close()
