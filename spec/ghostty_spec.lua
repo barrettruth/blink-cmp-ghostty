@@ -57,6 +57,7 @@ local function mock_enums()
     end
     return original_realpath(path)
   end
+  -- selene: allow(incorrect_standard_library_use)
   io.open = function(path, mode)
     if path:match('ghostty%.bash$') then
       return {
@@ -72,6 +73,7 @@ local function mock_enums()
   return function()
     vim.fn.exepath = original_exepath
     vim.uv.fs_realpath = original_realpath
+    -- selene: allow(incorrect_standard_library_use)
     io.open = original_open
   end
 end
@@ -95,6 +97,43 @@ describe('blink-cmp-ghostty', function()
       local bufnr = helpers.create_buffer({}, 'ghostty')
       local source = require('blink-cmp-ghostty')
       assert.is_true(source.enabled())
+      helpers.delete_buffer(bufnr)
+    end)
+
+    it('returns true for config filetype in ghostty config dir', function()
+      local source = require('blink-cmp-ghostty')
+      local bufnr = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_set_current_buf(bufnr)
+      vim.api.nvim_set_option_value('filetype', 'config', { buf = bufnr })
+      local config_path = vim.fn.expand('$HOME/.config/ghostty/config')
+      vim.api.nvim_buf_set_name(bufnr, config_path)
+      local original_realpath = vim.uv.fs_realpath
+      vim.uv.fs_realpath = function(p)
+        if p == config_path then
+          return config_path
+        end
+        return original_realpath(p)
+      end
+      assert.is_true(source.enabled())
+      vim.uv.fs_realpath = original_realpath
+      helpers.delete_buffer(bufnr)
+    end)
+
+    it('returns false for config filetype outside ghostty dir', function()
+      local source = require('blink-cmp-ghostty')
+      local bufnr = vim.api.nvim_create_buf(false, true)
+      vim.api.nvim_set_current_buf(bufnr)
+      vim.api.nvim_set_option_value('filetype', 'config', { buf = bufnr })
+      vim.api.nvim_buf_set_name(bufnr, '/tmp/some-other/config')
+      local original_realpath = vim.uv.fs_realpath
+      vim.uv.fs_realpath = function(p)
+        if p == '/tmp/some-other/config' then
+          return '/tmp/some-other/config'
+        end
+        return original_realpath(p)
+      end
+      assert.is_false(source.enabled())
+      vim.uv.fs_realpath = original_realpath
       helpers.delete_buffer(bufnr)
     end)
 
