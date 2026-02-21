@@ -72,7 +72,6 @@ local function mock_enums()
     end
     return original_realpath(path)
   end
-  -- selene: allow(incorrect_standard_library_use)
   io.open = function(path, mode)
     if path:match('ghostty%.bash$') then
       return {
@@ -88,7 +87,6 @@ local function mock_enums()
   return function()
     vim.fn.exepath = original_exepath
     vim.uv.fs_realpath = original_realpath
-    -- selene: allow(incorrect_standard_library_use)
     io.open = original_open
   end
 end
