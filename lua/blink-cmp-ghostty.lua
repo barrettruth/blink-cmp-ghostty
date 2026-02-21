@@ -5,6 +5,9 @@ local M = {}
 local keys_cache = nil
 ---@type table<string, string[]>?
 local enums_cache = nil
+local loading = false
+---@type {ctx: blink.cmp.Context, callback: fun(response: blink.cmp.CompletionResponse)}[]
+local pending = {}
 
 function M.new()
   return setmetatable({}, { __index = M })
@@ -15,14 +18,14 @@ function M.enabled()
   return vim.bo.filetype == 'ghostty'
 end
 
+---@param stdout string
 ---@return blink.cmp.CompletionItem[]
-local function parse_keys()
+local function parse_keys(stdout)
   local Kind = require('blink.cmp.types').CompletionItemKind
-  local result = vim.system({ 'ghostty', '+show-config', '--docs' }):wait()
   local items = {}
   local doc_lines = {}
 
-  for line in ((result.stdout or '') .. '\n'):gmatch('(.-)\n') do
+  for line in (stdout .. '\n'):gmatch('(.-)\n') do
     if line:match('^#') then
       local stripped = line:gsub('^# ?', '')
       doc_lines[#doc_lines + 1] = stripped
@@ -79,13 +82,7 @@ end
 
 ---@param ctx blink.cmp.Context
 ---@param callback fun(response: blink.cmp.CompletionResponse)
----@return fun()
-function M:get_completions(ctx, callback)
-  if not keys_cache then
-    keys_cache = parse_keys()
-    enums_cache = parse_enums()
-  end
-
+local function respond(ctx, callback)
   local line = ctx.line
   local col = ctx.cursor[2]
   local eq_pos = line:find('=')
@@ -108,15 +105,41 @@ function M:get_completions(ctx, callback)
         is_incomplete_backward = false,
         items = items,
       })
-      return function() end
+      return
     end
     callback({ items = {} })
   else
     callback({
       is_incomplete_forward = false,
       is_incomplete_backward = false,
-      items = vim.deepcopy(keys_cache),
+      items = keys_cache,
     })
+  end
+end
+
+---@param ctx blink.cmp.Context
+---@param callback fun(response: blink.cmp.CompletionResponse)
+---@return fun()
+function M:get_completions(ctx, callback)
+  if keys_cache then
+    respond(ctx, callback)
+    return function() end
+  end
+
+  pending[#pending + 1] = { ctx = ctx, callback = callback }
+  if not loading then
+    loading = true
+    vim.system({ 'ghostty', '+show-config', '--docs' }, {}, function(result)
+      vim.schedule(function()
+        keys_cache = parse_keys(result.stdout or '')
+        enums_cache = parse_enums()
+        loading = false
+        for _, p in ipairs(pending) do
+          respond(p.ctx, p.callback)
+        end
+        pending = {}
+      end)
+    end)
   end
   return function() end
 end
