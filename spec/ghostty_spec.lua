@@ -55,10 +55,15 @@ local function mock_system()
   end
 end
 
+local MOCK_FD = 99
+
 local function mock_enums()
   local original_exepath = vim.fn.exepath
   local original_realpath = vim.uv.fs_realpath
-  local original_open = io.open
+  local original_fs_open = vim.uv.fs_open
+  local original_fs_fstat = vim.uv.fs_fstat
+  local original_fs_read = vim.uv.fs_read
+  local original_fs_close = vim.uv.fs_close
 
   vim.fn.exepath = function(name)
     if name == 'ghostty' then
@@ -72,24 +77,41 @@ local function mock_enums()
     end
     return original_realpath(path)
   end
-  -- selene: allow(incorrect_standard_library_use)
-  io.open = function(path, mode)
+  vim.uv.fs_open = function(path, flags, mode, callback)
     if path:match('ghostty%.bash$') then
-      return {
-        read = function()
-          return BASH_COMPLETION
-        end,
-        close = function() end,
-      }
+      callback(nil, MOCK_FD)
+      return
     end
-    return original_open(path, mode)
+    return original_fs_open(path, flags, mode, callback)
+  end
+  vim.uv.fs_fstat = function(fd, callback)
+    if fd == MOCK_FD then
+      callback(nil, { size = #BASH_COMPLETION })
+      return
+    end
+    return original_fs_fstat(fd, callback)
+  end
+  vim.uv.fs_read = function(fd, size, offset, callback)
+    if fd == MOCK_FD then
+      callback(nil, BASH_COMPLETION)
+      return
+    end
+    return original_fs_read(fd, size, offset, callback)
+  end
+  vim.uv.fs_close = function(fd, ...)
+    if fd == MOCK_FD then
+      return true
+    end
+    return original_fs_close(fd, ...)
   end
 
   return function()
     vim.fn.exepath = original_exepath
     vim.uv.fs_realpath = original_realpath
-    -- selene: allow(incorrect_standard_library_use)
-    io.open = original_open
+    vim.uv.fs_open = original_fs_open
+    vim.uv.fs_fstat = original_fs_fstat
+    vim.uv.fs_read = original_fs_read
+    vim.uv.fs_close = original_fs_close
   end
 end
 

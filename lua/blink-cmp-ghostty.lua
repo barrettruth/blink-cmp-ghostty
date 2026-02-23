@@ -193,7 +193,7 @@ function M:get_completions(ctx, callback)
             on_all_done()
             return
           end
-          vim.uv.fs_read(fd, stat.size, 0, function(err3, data)
+          vim.uv.fs_read(fd, stat.size, 0, function(_, data)
             vim.uv.fs_close(fd)
             enums_content = data or ''
             on_all_done()
