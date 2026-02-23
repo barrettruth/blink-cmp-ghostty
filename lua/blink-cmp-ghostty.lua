@@ -85,18 +85,7 @@ function M.bash_completion_path()
 end
 
 ---@return table<string, string[]>
-local function parse_enums()
-  local path = M.bash_completion_path()
-  if not path then
-    return {}
-  end
-  local fd = io.open(path, 'r')
-  if not fd then
-    return {}
-  end
-  local content = fd:read('*a')
-  fd:close()
-
+local function parse_enums(content)
   local enums = {}
   for key, values in content:gmatch('%-%-([a-z][a-z0-9-]*)%) [^\n]* compgen %-W "([^"]+)"') do
     local vals = {}
@@ -162,17 +151,56 @@ function M:get_completions(ctx, callback)
   pending[#pending + 1] = { ctx = ctx, callback = callback }
   if not loading then
     loading = true
-    vim.system({ 'ghostty', '+show-config', '--docs' }, {}, function(result)
+    local config_out, enums_content
+    local remaining = 2
+
+    local function on_all_done()
+      remaining = remaining - 1
+      if remaining > 0 then
+        return
+      end
       vim.schedule(function()
-        keys_cache = parse_keys(result.stdout or '')
-        enums_cache = parse_enums()
+        keys_cache = parse_keys(config_out)
+        enums_cache = parse_enums(enums_content)
         loading = false
         for _, p in ipairs(pending) do
           respond(p.ctx, p.callback)
         end
         pending = {}
       end)
+    end
+
+    vim.system({ 'ghostty', '+show-config', '--docs' }, {}, function(result)
+      config_out = result.stdout or ''
+      on_all_done()
     end)
+
+    local path = M.bash_completion_path()
+    if not path then
+      enums_content = ''
+      on_all_done()
+    else
+      vim.uv.fs_open(path, 'r', 438, function(err, fd)
+        if err or not fd then
+          enums_content = ''
+          on_all_done()
+          return
+        end
+        vim.uv.fs_fstat(fd, function(err2, stat)
+          if err2 or not stat then
+            vim.uv.fs_close(fd)
+            enums_content = ''
+            on_all_done()
+            return
+          end
+          vim.uv.fs_read(fd, stat.size, 0, function(err3, data)
+            vim.uv.fs_close(fd)
+            enums_content = data or ''
+            on_all_done()
+          end)
+        end)
+      end)
+    end
   end
   return function() end
 end
