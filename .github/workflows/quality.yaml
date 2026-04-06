@@ -9,9 +9,7 @@ on:
 
 jobs:
   changes:
-    runs-on: [self-hosted, linux, x64, netcup, general]
-    permissions:
-      pull-requests: read
+    runs-on: ubuntu-latest
     outputs:
       lua: ${{ steps.changes.outputs.lua }}
       markdown: ${{ steps.changes.outputs.markdown }}
@@ -33,7 +31,7 @@ jobs:
 
   lua-format:
     name: Lua Format Check
-    runs-on: [self-hosted, linux, x64, netcup, general]
+    runs-on: ubuntu-latest
     needs: changes
     if: ${{ needs.changes.outputs.lua == 'true' }}
     steps:
@@ -43,7 +41,7 @@ jobs:
 
   lua-lint:
     name: Lua Lint Check
-    runs-on: [self-hosted, linux, x64, netcup, general]
+    runs-on: ubuntu-latest
     needs: changes
     if: ${{ needs.changes.outputs.lua == 'true' }}
     steps:
@@ -53,7 +51,7 @@ jobs:
 
   lua-typecheck:
     name: Lua Type Check
-    runs-on: [self-hosted, linux, x64, netcup, general]
+    runs-on: ubuntu-latest
     needs: changes
     if: ${{ needs.changes.outputs.lua == 'true' }}
     steps:
@@ -67,7 +65,7 @@ jobs:
 
   markdown-format:
     name: Markdown Format Check
-    runs-on: [self-hosted, linux, x64, netcup, general]
+    runs-on: ubuntu-latest
     needs: changes
     if: ${{ needs.changes.outputs.markdown == 'true' }}
     steps:
