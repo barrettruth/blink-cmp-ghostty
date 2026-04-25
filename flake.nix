@@ -25,7 +25,7 @@
                 nlua
               ]
             ))
-            pkgs.prettier
+            pkgs.biome
             pkgs.stylua
             pkgs.selene
           ];
