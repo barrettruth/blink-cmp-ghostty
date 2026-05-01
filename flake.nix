@@ -16,20 +16,32 @@
       forEachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
     in
     {
-      devShells = forEachSystem (pkgs: {
-        default = pkgs.mkShell {
-          packages = [
-            (pkgs.luajit.withPackages (
-              ps: with ps; [
-                busted
-                nlua
-              ]
-            ))
+      devShells = forEachSystem (
+        pkgs:
+        let
+          luaEnv = pkgs.luajit.withPackages (
+            ps: with ps; [
+              busted
+              nlua
+            ]
+          );
+          commonPackages = [
+            luaEnv
             pkgs.biome
-            pkgs.stylua
+            pkgs.just
+            pkgs.lua-language-server
             pkgs.selene
+            pkgs.stylua
           ];
-        };
-      });
+        in
+        {
+          default = pkgs.mkShell {
+            packages = commonPackages;
+          };
+          ci = pkgs.mkShell {
+            packages = commonPackages ++ [ pkgs.neovim ];
+          };
+        }
+      );
     };
 }
