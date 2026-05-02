@@ -6,7 +6,7 @@
 Ghostty configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
-<img width="1920" height="1196" alt="blink-cmp-ghostty preview" src="https://github.com/user-attachments/assets/da2ec4bf-8f96-46a6-8fc0-13ebb0fcccb3" />
+![blink-cmp-ghostty preview](https://github.com/user-attachments/assets/da2ec4bf-8f96-46a6-8fc0-13ebb0fcccb3)
 
 ## Features
 
