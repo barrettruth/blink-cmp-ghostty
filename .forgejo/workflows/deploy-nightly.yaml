@@ -6,11 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  quality-gate:
-    name: Quality Gate
+  luarocks-nightly:
+    name: LuaRocks (nightly)
     runs-on: nix
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Wait for quality
         env:
@@ -19,15 +21,6 @@ jobs:
           REPOSITORY: ${{ github.repository }}
           SHA: ${{ github.sha }}
         run: nix shell nixpkgs#curl nixpkgs#jq -c bash .forgejo/scripts/wait-for-quality.sh
-
-  luarocks-nightly:
-    name: LuaRocks (nightly)
-    needs: quality-gate
-    runs-on: nix
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Compute LuaRocks specrev
         run: echo "LUAROCKS_SPECREV=$(git rev-list --count "$GITHUB_SHA")" >> "$GITHUB_ENV"
