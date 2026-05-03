@@ -8,8 +8,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
-    name: ${{ github.ref == 'refs/heads/main' && 'LuaRocks (nightly)' || 'LuaRocks' }}
+  luarocks:
+    name: LuaRocks
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: nix
     steps:
       - uses: actions/checkout@v4
@@ -18,13 +19,37 @@ jobs:
 
       - name: Validate deploy ref
         run: |
-          case "$GITHUB_REF" in
-            refs/heads/main|refs/tags/v*) ;;
-            *)
-              echo "Deploy only runs on main or v* tags; got $GITHUB_REF" >&2
-              exit 1
-              ;;
-          esac
+          if ! [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "LuaRocks releases only run on v* tags; got $GITHUB_REF" >&2
+            exit 1
+          fi
+
+      - name: Wait for quality
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SERVER_URL: ${{ github.server_url }}
+          REPOSITORY: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: nix shell nixpkgs#curl nixpkgs#jq -c bash .forgejo/scripts/wait-for-quality.sh
+
+      - name: Publish to LuaRocks
+        uses: https://git.barrettruth.com/barrettruth/luarocks-tag-release-forgejo@v0.1.3
+        env:
+          LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+        with:
+          license: GPL-3.0
+          verification_servers: |
+            https://luarocks.org
+            https://luarocks.org/manifests/barrettruth
+
+  luarocks-nightly:
+    name: LuaRocks (nightly)
+    if: github.ref == 'refs/heads/main'
+    runs-on: nix
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Wait for quality
         env:
@@ -35,11 +60,9 @@ jobs:
         run: nix shell nixpkgs#curl nixpkgs#jq -c bash .forgejo/scripts/wait-for-quality.sh
 
       - name: Compute LuaRocks specrev
-        if: github.ref == 'refs/heads/main'
         run: echo "LUAROCKS_SPECREV=$(git rev-list --count "$GITHUB_SHA")" >> "$GITHUB_ENV"
 
       - name: Publish nightly LuaRocks
-        if: github.ref == 'refs/heads/main'
         uses: https://git.barrettruth.com/barrettruth/luarocks-tag-release-forgejo@v0.1.3
         env:
           LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
@@ -50,14 +73,3 @@ jobs:
           verification_servers: |
             https://luarocks.org/manifests/barrettruth
             https://luarocks.org/dev
-
-      - name: Publish to LuaRocks
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: https://git.barrettruth.com/barrettruth/luarocks-tag-release-forgejo@v0.1.3
-        env:
-          LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
-        with:
-          license: GPL-3.0
-          verification_servers: |
-            https://luarocks.org
-            https://luarocks.org/manifests/barrettruth
