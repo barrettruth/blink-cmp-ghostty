@@ -32,7 +32,7 @@ Or with lazy.nvim:
 {
   'saghen/blink.cmp',
   dependencies = {
-    'barrettruth/blink-cmp-ghostty',
+    { url = 'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty' },
   },
   opts = {
     sources = {
