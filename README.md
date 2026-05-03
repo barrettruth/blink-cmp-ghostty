@@ -19,31 +19,32 @@ Ghostty configuration completion source for
 
 ## Installation
 
-Install via
-[luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ghostty):
+With `vim.pack` (Neovim 0.12+):
+
+```lua
+vim.pack.add({
+  'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty',
+})
+```
+
+Or via [luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ghostty):
 
 ```
 luarocks install blink-cmp-ghostty
 ```
 
-Or with lazy.nvim:
+Configure `blink.cmp`:
 
 ```lua
-{
-  'saghen/blink.cmp',
-  dependencies = {
-    { url = 'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty' },
-  },
-  opts = {
-    sources = {
-      default = { 'ghostty' },
-      providers = {
-        ghostty = {
-          name = 'Ghostty',
-          module = 'blink-cmp-ghostty',
-        },
+require('blink.cmp').setup({
+  sources = {
+    default = { 'ghostty' },
+    providers = {
+      ghostty = {
+        name = 'Ghostty',
+        module = 'blink-cmp-ghostty',
       },
     },
   },
-}
+})
 ```
