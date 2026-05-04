@@ -3,6 +3,11 @@
 Ghostty configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
+> [!NOTE]
+> Due to GitHub's historic unreliability, development, issues, and pull requests
+> have moved to
+> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ghostty).
+
 ![blink-cmp-ghostty preview](https://github.com/user-attachments/assets/da2ec4bf-8f96-46a6-8fc0-13ebb0fcccb3)
 
 ## Features
