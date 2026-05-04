@@ -6,7 +6,8 @@ Ghostty configuration completion source for
 > [!NOTE]
 > Due to GitHub's historic unreliability, development, issues, and pull requests
 > have moved to
-> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ghostty).
+> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ghostty). See
+> `:help blink-cmp-ghostty-forgejo` for canonical project links.
 
 ![blink-cmp-ghostty preview](https://github.com/user-attachments/assets/da2ec4bf-8f96-46a6-8fc0-13ebb0fcccb3)
 

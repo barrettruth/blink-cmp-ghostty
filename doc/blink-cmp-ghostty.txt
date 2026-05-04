@@ -1,0 +1,65 @@
+*blink-cmp-ghostty.txt* Ghostty configuration completion source for blink.cmp
+
+Author:  Barrett Ruth <br@barrettruth.com> License: GPL-3.0
+
+==============================================================================
+CONTENTS                                          *blink-cmp-ghostty-contents*
+
+  1. Introduction ................................. |blink-cmp-ghostty|
+  2. Installation ......................... |blink-cmp-ghostty-installation|
+  3. Configuration ....................... |blink-cmp-ghostty-configuration|
+  4. Forgejo ................................ |blink-cmp-ghostty-forgejo|
+  5. Health .................................. |blink-cmp-ghostty-health|
+
+==============================================================================
+INTRODUCTION                                               *blink-cmp-ghostty*
+
+blink-cmp-ghostty provides Ghostty configuration completions for blink.cmp. It
+completes Ghostty configuration keys, enum values, and documentation extracted
+from `ghostty +show-config --docs`.
+
+==============================================================================
+INSTALLATION                                  *blink-cmp-ghostty-installation*
+
+With vim.pack (Neovim 0.12+): >lua
+    vim.pack.add({
+      'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty',
+    })
+< With luarocks: >sh
+    luarocks install blink-cmp-ghostty
+<
+
+==============================================================================
+CONFIGURATION                                *blink-cmp-ghostty-configuration*
+
+Register the source with blink.cmp: >lua
+    require('blink.cmp').setup({
+      sources = {
+        default = { 'ghostty' },
+        providers = {
+          ghostty = {
+            name = 'Ghostty',
+            module = 'blink-cmp-ghostty',
+          },
+        },
+      },
+    })
+<
+
+==============================================================================
+FORGEJO                                            *blink-cmp-ghostty-forgejo*
+
+Due to GitHub's historic unreliability, development, issues, and pull requests
+have moved to: >
+    https://git.barrettruth.com/barrettruth/blink-cmp-ghostty
+<
+Use Forgejo for documentation, issues, pull requests, and active development.
+
+==============================================================================
+HEALTH                                              *blink-cmp-ghostty-health*
+
+Run: >vim
+    :checkhealth blink-cmp-ghostty
+<
+
+vim:tw=78:ts=8:ft=help:norl:

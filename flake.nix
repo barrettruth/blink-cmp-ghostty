@@ -32,6 +32,7 @@
             pkgs.lua-language-server
             pkgs.selene
             pkgs.stylua
+            pkgs.vimdoc-language-server
           ];
         in
         {
