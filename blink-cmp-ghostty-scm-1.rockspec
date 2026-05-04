@@ -9,7 +9,7 @@ source = {
 description = {
   summary = 'Ghostty configuration completion source for blink.cmp',
   homepage = 'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty',
-  license = 'MIT',
+  license = 'GPL-3.0',
 }
 
 dependencies = {
