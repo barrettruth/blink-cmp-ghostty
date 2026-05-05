@@ -6,6 +6,8 @@ CLAUDE.md
 
 node_modules/
 
+doc/tags
+
 result
 result-*
 .direnv/
