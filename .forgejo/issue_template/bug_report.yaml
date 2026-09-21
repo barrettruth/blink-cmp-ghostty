@@ -9,7 +9,7 @@ body:
       options:
         - label:
             I have searched [existing
-            issues](https://git.barrettruth.com/barrettruth/blink-cmp-ghostty/issues)
+            issues](https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty/issues)
           required: true
         - label: I have updated to the latest version
           required: true
@@ -60,7 +60,7 @@ body:
       value: |
         vim.pack.add({
           'https://github.com/saghen/blink.cmp',
-          'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty',
+          'https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty',
         })
         require('blink.cmp').setup({
           sources = {

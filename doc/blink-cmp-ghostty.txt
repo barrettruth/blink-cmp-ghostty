@@ -23,7 +23,7 @@ INSTALLATION                                  *blink-cmp-ghostty-installation*
 
 With vim.pack (Neovim 0.12+): >lua
     vim.pack.add({
-      'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty',
+      'https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty',
     })
 < With luarocks: >sh
     luarocks install blink-cmp-ghostty
@@ -51,7 +51,7 @@ FORGEJO                                            *blink-cmp-ghostty-forgejo*
 
 Due to GitHub's historic unreliability, development, issues, and pull requests
 have moved to: >
-    https://git.barrettruth.com/barrettruth/blink-cmp-ghostty
+    https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty
 <
 Use Forgejo for documentation, issues, pull requests, and active development.
 

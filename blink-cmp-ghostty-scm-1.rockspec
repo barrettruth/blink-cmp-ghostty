@@ -3,12 +3,12 @@ package = 'blink-cmp-ghostty'
 version = 'scm-1'
 
 source = {
-  url = 'git+https://git.barrettruth.com/barrettruth/blink-cmp-ghostty.git',
+  url = 'git+https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty.git',
 }
 
 description = {
   summary = 'Ghostty configuration completion source for blink.cmp',
-  homepage = 'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty',
+  homepage = 'https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty',
   license = 'GPL-3.0',
 }
 

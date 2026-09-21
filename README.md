@@ -5,7 +5,7 @@ Ghostty configuration completion source for
 
 > [!NOTE]
 > Due to GitHub's historic unreliability, active development is hosted on
-> [Forgejo](https://git.barrettruth.com/barrettruth/blink-cmp-ghostty).
+> [Forgejo](https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty).
 > GitHub is maintained as a read-only mirror.
 > See `:help blink-cmp-ghostty-forgejo` for canonical project links.
 
@@ -29,7 +29,7 @@ With `vim.pack` (Neovim 0.12+):
 
 ```lua
 vim.pack.add({
-  'https://git.barrettruth.com/barrettruth/blink-cmp-ghostty',
+  'https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty',
 })
 ```
 
