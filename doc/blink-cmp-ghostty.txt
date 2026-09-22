@@ -8,7 +8,7 @@ CONTENTS                                          *blink-cmp-ghostty-contents*
   1. Introduction ................................. |blink-cmp-ghostty|
   2. Installation ......................... |blink-cmp-ghostty-installation|
   3. Configuration ....................... |blink-cmp-ghostty-configuration|
-  4. Forgejo ................................ |blink-cmp-ghostty-forgejo|
+  4. Migration ............................. |blink-cmp-ghostty-migration|
   5. Health .................................. |blink-cmp-ghostty-health|
 
 ==============================================================================
@@ -47,12 +47,14 @@ Register the source with blink.cmp: >lua
 <
 
 ==============================================================================
-FORGEJO                                            *blink-cmp-ghostty-forgejo*
+MIGRATION                                        *blink-cmp-ghostty-migration*
 
-Development, issues, and pull requests are on Forgejo: >
-    https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty
+blink-cmp-ghostty will be removed from GitHub on October 31, 2026. Update your
+plugin source to Forgejo: >lua
+    vim.pack.add({
+      'https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty',
+    })
 <
-Use Forgejo for documentation, issues, pull requests, and active development.
 
 ==============================================================================
 HEALTH                                              *blink-cmp-ghostty-health*
