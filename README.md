@@ -3,7 +3,7 @@
 Ghostty configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
-![blink-cmp-ghostty preview](assets/blink-cmp-ghostty.webp)
+![blink-cmp-ghostty preview](https://forge.barrettruth.com/attachments/cffc9f76-88ce-41f3-a2ac-f4cf4fadbf7b)
 
 ## Features
 
