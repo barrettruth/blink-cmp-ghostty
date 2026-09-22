@@ -3,10 +3,6 @@
 Ghostty configuration completion source for
 [blink.cmp](https://github.com/saghen/blink.cmp).
 
-> [!NOTE]
-> Active development is hosted on
-> [Forgejo](https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty).
-
 ![blink-cmp-ghostty preview](assets/blink-cmp-ghostty.webp)
 
 ## Features
