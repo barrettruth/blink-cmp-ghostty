@@ -31,12 +31,6 @@ vim.pack.add({
 })
 ```
 
-Or via [luarocks](https://luarocks.org/modules/barrettruth/blink-cmp-ghostty):
-
-```
-luarocks install blink-cmp-ghostty
-```
-
 Configure `blink.cmp`:
 
 ```lua

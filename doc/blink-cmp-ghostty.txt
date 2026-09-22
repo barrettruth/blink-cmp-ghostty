@@ -25,10 +25,6 @@ With vim.pack (Neovim 0.12+): >lua
     vim.pack.add({
       'https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty',
     })
-< With luarocks: >sh
-    luarocks install blink-cmp-ghostty
-<
-
 ==============================================================================
 CONFIGURATION                                *blink-cmp-ghostty-configuration*
 
