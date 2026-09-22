@@ -49,8 +49,7 @@ Register the source with blink.cmp: >lua
 ==============================================================================
 FORGEJO                                            *blink-cmp-ghostty-forgejo*
 
-Due to GitHub's historic unreliability, development, issues, and pull requests
-have moved to: >
+Development, issues, and pull requests are on Forgejo: >
     https://forge.barrettruth.com/barrettruth/blink-cmp-ghostty
 <
 Use Forgejo for documentation, issues, pull requests, and active development.
